@@ -1,0 +1,76 @@
+# 🔑 Variáveis de Ambiente
+
+Use este arquivo como base para sua configuração local.
+
+## Como usar
+
+1. Copie este arquivo e renomeie para `.env.local`:
+```bash
+cp ENV_TEMPLATE .env.local
+```
+
+2. Preencha seus valores reais
+
+3. **IMPORTANTE**: Nunca commite `.env` ou `.env.local` no git (já está em `.gitignore`)
+
+---
+
+## Variáveis Necessárias
+
+### Claude API
+```
+CLAUDE_API_KEY=sua_chave_aqui
+```
+- Onde conseguir: https://console.anthropic.com/keys
+- Como usar: Crie uma nova API key e copie
+- Custo: Pay-as-you-go (~$0.01 por 1000 tokens)
+
+### Evolution API
+```
+EVOLUTION_API_KEY=sua_chave_aqui
+```
+- Onde conseguir: http://localhost:8080 após conectar
+- Como usar: Vá em Settings dentro da interface Evolution
+- Alternativa: Use valor aleatório para testar com simulador
+
+### WhatsApp do Consultor
+```
+CONSULTOR_WHATSAPP=5511987654321
+```
+- Formato: +55 + DDD + número (9 dígitos)
+- Exemplo: 5511987654321 (São Paulo)
+- Importante: Este número vai receber notificações de leads QUENTES
+
+### Configuração n8n (variáveis dentro do n8n)
+No painel do n8n (http://localhost:5678):
+- Settings → Variables
+- Adicione as mesmas 3 variáveis acima
+
+---
+
+## Valores Padrão para Testes
+
+Se você quer apenas testar com o simulador:
+
+```
+CLAUDE_API_KEY=teste-key-123456789
+EVOLUTION_API_KEY=teste-key-987654321
+CONSULTOR_WHATSAPP=5511999999999
+```
+
+O simulador vai funcionar mesmo com valores de teste.
+
+---
+
+## Segurança
+
+- ⚠️ Nunca compartilhe suas API Keys
+- ⚠️ Nunca hardcode keys no código
+- ⚠️ Use apenas em ambiente local até validar
+- ✅ Para produção: use gerenciador de secrets (AWS Secrets Manager, Vault, etc)
+
+---
+
+## Próximo Passo
+
+Uma vez configurado, comece pelo SETUP_RAPIDO.md

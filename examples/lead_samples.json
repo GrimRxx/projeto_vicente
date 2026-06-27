@@ -1,0 +1,207 @@
+{
+  "conversation_history_schema": {
+    "description": "Esquema para armazenar conversas de leads",
+    "version": "1.0"
+  },
+
+  "example_conversation": {
+    "id": "conv_20260527_001",
+    "lead_id": "lead_001",
+    "lead_info": {
+      "name": "João Silva",
+      "phone": "11987654321",
+      "first_contact": "2026-05-27T10:00:00Z",
+      "platform": "whatsapp"
+    },
+    "conversation_metadata": {
+      "duration_minutes": 8,
+      "total_turns": 8,
+      "status": "completed",
+      "classification": "🔥 QUENTE",
+      "score": 105,
+      "should_notify": true
+    },
+    "messages": [
+      {
+        "turn": 1,
+        "role": "lead",
+        "text": "Olá! Tô reformando meu apartamento e preciso urgente de um sofá",
+        "timestamp": "2026-05-27T10:00:00Z",
+        "entities": {
+          "project_type": "reforma",
+          "urgency": "alta",
+          "product_interest": "sofá"
+        }
+      },
+      {
+        "turn": 2,
+        "role": "assistant",
+        "text": "Oi! 👋 Bem-vindo! Sou consultora de vendas. Que legal que você está reformando! 🎉\n\nMe diz: qual é seu nome e qual é o tamanho/estilo de sofá que você procura?",
+        "timestamp": "2026-05-27T10:00:30Z",
+        "reasoning": "Greeting + product discovery"
+      },
+      {
+        "turn": 3,
+        "role": "lead",
+        "text": "Sou o João. Quero um sofá cinza, moderno, grande mesmo",
+        "timestamp": "2026-05-27T10:02:00Z",
+        "entities": {
+          "name": "João",
+          "color_preference": "cinza",
+          "style": "moderno",
+          "size": "grande"
+        }
+      },
+      {
+        "turn": 4,
+        "role": "assistant",
+        "text": "Ótimo, João! 😊 Sofá cinza grande é sempre uma boa opção.\n\nMe diz: em quanto tempo você precisa? A reforma já está em andamento?",
+        "timestamp": "2026-05-27T10:02:30Z",
+        "reasoning": "Qualify urgency and project status"
+      },
+      {
+        "turn": 5,
+        "role": "lead",
+        "text": "Preciso em 2 semanas! Tá tudo sendo feito agora",
+        "timestamp": "2026-05-27T10:03:00Z",
+        "entities": {
+          "timeline_days": 14,
+          "urgency_level": "high",
+          "project_started": true
+        }
+      },
+      {
+        "turn": 6,
+        "role": "assistant",
+        "text": "2 semanas é rápido mesmo! 🚀 Conseguimos fazer isso.\n\nUma pergunta importante: você tem uma ideia de orçamento para o sofá?",
+        "timestamp": "2026-05-27T10:03:30Z",
+        "reasoning": "Qualify budget"
+      },
+      {
+        "turn": 7,
+        "role": "lead",
+        "text": "Tenho 8k para investir. Posso pagar à vista ou parcelar",
+        "timestamp": "2026-05-27T10:04:00Z",
+        "entities": {
+          "budget": 8000,
+          "payment_options": ["cash", "installment"]
+        }
+      },
+      {
+        "turn": 8,
+        "role": "assistant",
+        "text": "Perfeito, João! 💰 Com 8k conseguimos excelentes opções.\n\nVocê pode vir conhecer nosso showroom? Temos sofás que combinam com seu projeto!",
+        "timestamp": "2026-05-27T10:04:30Z",
+        "reasoning": "Close with action (visit showroom)"
+      }
+    ],
+    "qualification_details": {
+      "urgency_score": 40,
+      "budget_score": 35,
+      "project_score": 15,
+      "behavior_score": 15,
+      "experience_score": 0,
+      "total_score": 105,
+      "classification_reason": "Lead com urgência clara (2 semanas), orçamento definido (8k), projeto em andamento, comportamento proativo buscando agendamento"
+    },
+    "actions_taken": [
+      {
+        "action": "notify_consultant",
+        "timestamp": "2026-05-27T10:05:00Z",
+        "method": "whatsapp",
+        "recipient": "consultor",
+        "message": "🔥 LEAD QUENTE! João Silva - Sofá cinza, 8k, urgência 2 semanas"
+      },
+      {
+        "action": "save_to_db",
+        "timestamp": "2026-05-27T10:05:15Z",
+        "status": "completed"
+      }
+    ],
+    "next_steps": {
+      "priority": "SUPER_ALTA",
+      "recommended_action": "Contato direto do consultor",
+      "follow_up_date": "2026-05-27",
+      "notes": "Lead receptivo, bem qualificado. Viável converter em 48h se houver acompanhamento"
+    }
+  },
+
+  "database_schema": {
+    "table": "leads",
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "primary_key": true
+      },
+      {
+        "name": "phone",
+        "type": "TEXT",
+        "required": true,
+        "unique": true
+      },
+      {
+        "name": "name",
+        "type": "TEXT"
+      },
+      {
+        "name": "first_message",
+        "type": "TEXT"
+      },
+      {
+        "name": "classification",
+        "type": "TEXT"
+      },
+      {
+        "name": "score",
+        "type": "INTEGER"
+      },
+      {
+        "name": "budget",
+        "type": "INTEGER"
+      },
+      {
+        "name": "timeline",
+        "type": "TEXT"
+      },
+      {
+        "name": "product_interest",
+        "type": "TEXT"
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "name": "last_contact",
+        "type": "TIMESTAMP"
+      },
+      {
+        "name": "contacted_by_consultant",
+        "type": "BOOLEAN",
+        "default": false
+      },
+      {
+        "name": "status",
+        "type": "TEXT",
+        "options": ["novo", "contato_realizado", "agendado", "visitou", "comprou", "rejeitado"]
+      },
+      {
+        "name": "notes",
+        "type": "TEXT"
+      }
+    ]
+  },
+
+  "sql_setup": {
+    "create_table": "CREATE TABLE IF NOT EXISTS leads (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  phone TEXT NOT NULL UNIQUE,\n  name TEXT,\n  first_message TEXT,\n  classification TEXT,\n  score INTEGER,\n  budget INTEGER,\n  timeline TEXT,\n  product_interest TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  last_contact TIMESTAMP,\n  contacted_by_consultant BOOLEAN DEFAULT 0,\n  status TEXT,\n  notes TEXT\n);",
+
+    "query_examples": {
+      "get_quentes": "SELECT * FROM leads WHERE classification = '🔥 QUENTE' AND contacted_by_consultant = 0;",
+      "get_by_date": "SELECT * FROM leads WHERE DATE(created_at) = '2026-05-27';",
+      "get_stats": "SELECT classification, COUNT(*) as total FROM leads GROUP BY classification;",
+      "update_status": "UPDATE leads SET status = 'agendado', last_contact = CURRENT_TIMESTAMP WHERE id = ?;"
+    }
+  }
+}

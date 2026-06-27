@@ -1,0 +1,60 @@
+# Padrão Git para projeto lead-ai
+
+# Variáveis de ambiente (se usa no servidor)
+.env
+.env.local
+.env.*.local
+
+# Segredos / chaves
+*.key
+*.pem
+config/api_keys.json
+secrets/
+
+# Dependências
+node_modules/
+package-lock.json
+yarn.lock
+
+# Bancos de dados locais
+*.db
+*.sqlite
+*.sqlite3
+/data/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Cache
+.cache/
+*.cache
+
+# Backups / arquivos temporários
+backups/
+*.bak
+*.tmp
+
+# Coverage / testes
+coverage/
+.nyc_output/
+
+# Build (caso existam)
+dist/
+build/
+
+# Debug (apenas para garantir que nada de debug entre no repo)
+**/*debug*/
+
+# VSCode / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+

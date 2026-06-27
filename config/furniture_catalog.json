@@ -1,0 +1,129 @@
+{
+  "catalog": {
+    "description": "Catálogo de móveis de alto padrão - Use para referência no atendimento",
+    "last_updated": "2026-05-27",
+    "note": "Este é um template. Atualize com seus produtos reais."
+  },
+
+  "categories": {
+    "sofas": {
+      "name": "Sofás",
+      "subcategories": {
+        "2_lugares": [
+          {
+            "id": "sf001",
+            "name": "Sofá Minimalista 2L",
+            "colors": ["Cinza", "Branco", "Preto"],
+            "price_range": "3000-5000",
+            "description": "Design moderno, perfeito pra apts",
+            "material": "Tecido premium",
+            "customizable": true
+          }
+        ],
+        "3_lugares": [
+          {
+            "id": "sf002",
+            "name": "Sofá Conforto 3L",
+            "colors": ["Cinza", "Bege", "Marrom"],
+            "price_range": "5000-8000",
+            "description": "Muito confortável, ótimo custo-benefício",
+            "material": "Couro/Tecido",
+            "customizable": true
+          }
+        ],
+        "modulado": [
+          {
+            "id": "sf003",
+            "name": "Sofá Modular",
+            "colors": ["Cinza", "Branco"],
+            "price_range": "8000-15000",
+            "description": "Ajustável pro seu espaço",
+            "material": "Tecido premium",
+            "customizable": true
+          }
+        ]
+      }
+    },
+
+    "poltronas": {
+      "name": "Poltronas",
+      "options": [
+        {
+          "id": "pl001",
+          "name": "Poltrona Executiva",
+          "price_range": "2000-4000",
+          "use": "Escritório/Home Office",
+          "customizable": true
+        },
+        {
+          "id": "pl002",
+          "name": "Poltrona Aconchego",
+          "price_range": "1500-3000",
+          "use": "Sala/Quarto",
+          "customizable": true
+        }
+      ]
+    },
+
+    "camas": {
+      "name": "Camas",
+      "options": [
+        {
+          "id": "cb001",
+          "name": "Cama Box Premium",
+          "sizes": ["Solteiro", "Casal", "Queen", "King"],
+          "price_range": "2000-6000",
+          "material": "Mola/Espuma alta densidade",
+          "customizable": false
+        }
+      ]
+    },
+
+    "mesas": {
+      "name": "Mesas de Jantar",
+      "options": [
+        {
+          "id": "ms001",
+          "name": "Mesa Vidro Moderno",
+          "seats": "4-8",
+          "price_range": "2500-5000",
+          "customizable": true
+        }
+      ]
+    }
+  },
+
+  "promotional_selling_points": [
+    "6-8 semanas de prazo (Padrão industry)",
+    "Entrega e instalação grátis",
+    "Garantia de 3 anos",
+    "Consultoria de design sem custo",
+    "Financiamento disponível"
+  ],
+
+  "price_ranges": {
+    "budget": {
+      "min": 1500,
+      "max": 3000,
+      "description": "Entrada - Bom custo-benefício"
+    },
+    "mid_range": {
+      "min": 3000,
+      "max": 8000,
+      "description": "Premium - Ótima qualidade"
+    },
+    "luxury": {
+      "min": 8000,
+      "max": null,
+      "description": "Alto padrão - Produtos exclusivos"
+    }
+  },
+
+  "customization_options": [
+    "Escolha de cores/tecidos",
+    "Medidas ajustáveis",
+    "Designs personalizados",
+    "Materiais premium",
+    "Acabamentos especiais"
+  ]
+}

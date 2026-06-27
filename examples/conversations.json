@@ -1,0 +1,213 @@
+{
+  "conversation_examples": [
+    {
+      "id": "example_001",
+      "classification": "🔥 QUENTE",
+      "score": 95,
+      "conversation": [
+        {
+          "role": "lead",
+          "message": "Olá! Tô reformando meu apartamento e preciso urgente de um sofá",
+          "timestamp": "2026-05-27T10:00:00Z"
+        },
+        {
+          "role": "assistant",
+          "message": "Oi! 👋 Bem-vindo! Sou consultora de vendas. Que legal que você está reformando! 🎉\n\nMe diz: qual é seu nome e qual é o tamanho/estilo de sofá que você procura?",
+          "timestamp": "2026-05-27T10:00:30Z"
+        },
+        {
+          "role": "lead",
+          "message": "Sou o João. Quero um sofá cinza, moderno, grande mesmo",
+          "timestamp": "2026-05-27T10:02:00Z"
+        },
+        {
+          "role": "assistant",
+          "message": "Ótimo, João! 😊 Sofá cinza grande é sempre uma boa opção.\n\nMe diz: em quanto tempo você precisa? A reforma já está em andamento?",
+          "timestamp": "2026-05-27T10:02:30Z"
+        },
+        {
+          "role": "lead",
+          "message": "Preciso em 2 semanas! Tá tudo sendo feito agora",
+          "timestamp": "2026-05-27T10:03:00Z"
+        },
+        {
+          "role": "assistant",
+          "message": "2 semanas é rápido mesmo! 🚀 Conseguimos fazer isso.\n\nUma pergunta importante: você tem uma ideia de orçamento para o sofá?",
+          "timestamp": "2026-05-27T10:03:30Z"
+        },
+        {
+          "role": "lead",
+          "message": "Tenho 8k para investir. Posso pagar à vista ou parcelar",
+          "timestamp": "2026-05-27T10:04:00Z"
+        },
+        {
+          "role": "assistant",
+          "message": "Perfeito, João! 💰 Com 8k conseguimos excelentes opções.\n\nVocê pode vir conhecer nosso showroom? Temos sofás que combinam com seu projeto!",
+          "timestamp": "2026-05-27T10:04:30Z"
+        },
+        {
+          "role": "lead",
+          "message": "Posso! Quando vocês abrem amanhã?",
+          "timestamp": "2026-05-27T10:05:00Z"
+        }
+      ],
+      "analysis": {
+        "urgency_score": 40,
+        "budget_score": 35,
+        "project_score": 15,
+        "behavior_score": 15,
+        "experience_score": 0,
+        "total": 105,
+        "reason": "QUENTE - Urgência imediata (2 semanas), orçamento definido (8k), projeto específico em andamento, comportamento proativo solicitando agendamento"
+      }
+    },
+
+    {
+      "id": "example_002",
+      "classification": "❄️ MUITO FRIO",
+      "score": 15,
+      "conversation": [
+        {
+          "role": "lead",
+          "message": "Oi, tô só curiosidade, que sofás vocês têm?",
+          "timestamp": "2026-05-27T11:00:00Z"
+        },
+        {
+          "role": "assistant",
+          "message": "Olá! 👋 Bem-vindo! Temos várias opções de sofás.\n\nVocê está procurando para algo específico ou apenas explorando?",
+          "timestamp": "2026-05-27T11:00:30Z"
+        },
+        {
+          "role": "lead",
+          "message": "Acho que só explorando mesmo, tá difícil de decidir",
+          "timestamp": "2026-05-27T11:02:00Z"
+        },
+        {
+          "role": "assistant",
+          "message": "Entendo! Sem pressa então. 😊 Me conta: em quanto tempo você pensa em fazer algo?",
+          "timestamp": "2026-05-27T11:02:30Z"
+        },
+        {
+          "role": "lead",
+          "message": "Ah, sei lá, talvez no final do ano, mas ainda tá incerto",
+          "timestamp": "2026-05-27T11:03:00Z"
+        }
+      ],
+      "analysis": {
+        "urgency_score": 0,
+        "budget_score": 0,
+        "project_score": 0,
+        "behavior_score": 5,
+        "experience_score": 0,
+        "total": 5,
+        "reason": "MUITO FRIO - Nenhuma urgência, orçamento indefinido, projeto indefinido, exploração casual"
+      }
+    },
+
+    {
+      "id": "example_003",
+      "classification": "🟠 MORNO",
+      "score": 75,
+      "conversation": [
+        {
+          "role": "lead",
+          "message": "Olá! Procuro uma poltrona de qualidade pra meu escritório em casa",
+          "timestamp": "2026-05-27T09:00:00Z"
+        },
+        {
+          "role": "assistant",
+          "message": "Oi! 👋 Que legal! Home office precisa de conforto e qualidade mesmo.\n\nQual é seu nome?",
+          "timestamp": "2026-05-27T09:00:30Z"
+        },
+        {
+          "role": "lead",
+          "message": "Sou a Marina. Procuro algo ergonômico e bonito",
+          "timestamp": "2026-05-27T09:01:00Z"
+        },
+        {
+          "role": "assistant",
+          "message": "Ótimo, Marina! 😊 Temos poltronas excelentes pra home office.\n\nMe diz: quanto tempo você está pensando nisso?",
+          "timestamp": "2026-05-27T09:01:30Z"
+        },
+        {
+          "role": "lead",
+          "message": "Nos próximos 2-3 meses talvez, mas estou vendo opções",
+          "timestamp": "2026-05-27T09:02:00Z"
+        },
+        {
+          "role": "assistant",
+          "message": "Entendo! Tempo legal pra decidir bem. 💭\n\nVocê tem uma ideia de orçamento?",
+          "timestamp": "2026-05-27T09:02:30Z"
+        },
+        {
+          "role": "lead",
+          "message": "Sim, algo em torno de 3000 a 5000 reais",
+          "timestamp": "2026-05-27T09:03:00Z"
+        }
+      ],
+      "analysis": {
+        "urgency_score": 15,
+        "budget_score": 25,
+        "project_score": 10,
+        "behavior_score": 10,
+        "experience_score": 0,
+        "total": 60,
+        "reason": "MORNO - Médio prazo (2-3 meses), orçamento aproximado definido, projeto específico, engajamento moderado"
+      }
+    }
+  ],
+
+  "lead_samples": [
+    {
+      "id": "lead_001",
+      "name": "João Silva",
+      "whatsapp": "11987654321",
+      "classification": "🔥 QUENTE",
+      "conversation_date": "2026-05-27",
+      "details": {
+        "furniture_interest": ["Sofá"],
+        "budget": "R$ 8.000",
+        "timeline": "2 semanas",
+        "project": "Reforma de apartamento",
+        "project_status": "Em andamento",
+        "availability": "Pode visitar amanhã"
+      },
+      "next_action": "⚡ NOTIFICAR CONSULTOR - Agendar visita",
+      "priority": "SUPER_ALTA"
+    },
+    {
+      "id": "lead_002",
+      "name": "Marina Santos",
+      "whatsapp": "11998765432",
+      "classification": "🟠 MORNO",
+      "conversation_date": "2026-05-27",
+      "details": {
+        "furniture_interest": ["Poltrona"],
+        "budget": "R$ 3-5 mil",
+        "timeline": "2-3 meses",
+        "project": "Home office",
+        "project_status": "Planejamento",
+        "availability": "A definir"
+      },
+      "next_action": "📧 Follow-up em 24h",
+      "priority": "MEDIA"
+    },
+    {
+      "id": "lead_003",
+      "name": "Pedro Costa",
+      "whatsapp": "11996543210",
+      "classification": "❄️ MUITO FRIO",
+      "conversation_date": "2026-05-27",
+      "details": {
+        "furniture_interest": ["Sofá", "Poltronas"],
+        "budget": "Indefinido",
+        "timeline": "Indefinido (final do ano talvez)",
+        "project": "Renovação geral",
+        "project_status": "Exploração",
+        "availability": "Não mencionou"
+      },
+      "next_action": "📋 Adicionar à lista de nurturing",
+      "priority": "BAIXA"
+    }
+  ]
+}

@@ -1,0 +1,231 @@
+{
+  "classification_rules": {
+    "urgency": [
+      {
+        "keywords": ["urgente", "preciso", "já", "semana que vem", "próximos dias", "imediato", "rush"],
+        "timeframe_max": 15,
+        "score": 40,
+        "category": "Urgência Imediata"
+      },
+      {
+        "keywords": ["mês que vem", "daqui a um mês", "breve", "próximas semanas", "30 dias"],
+        "timeframe_max": 30,
+        "score": 30,
+        "category": "Curto Prazo"
+      },
+      {
+        "keywords": ["próximos 3 meses", "segundo trimestre", "antes do verão", "90 dias"],
+        "timeframe_max": 90,
+        "score": 15,
+        "category": "Médio Prazo"
+      },
+      {
+        "keywords": ["final do ano", "próximo ano", "ainda não sei", "sem pressa", "vai depender"],
+        "timeframe_max": 365,
+        "score": 5,
+        "category": "Longo Prazo"
+      },
+      {
+        "keywords": ["estou vendo", "explorando", "pesquisando", "só curiosidade"],
+        "timeframe_max": 0,
+        "score": 0,
+        "category": "Indefinido"
+      }
+    ],
+
+    "budget": [
+      {
+        "keywords": ["tenho", "orçamento", "limite", "disponho", "posso gastar", "meu máximo", "reais"],
+        "pattern": "\\d+(\\.?\\d{3})*",
+        "score": 35,
+        "category": "Orçamento Definido"
+      },
+      {
+        "keywords": ["em torno de", "aprox", "algo como", "entre", "na faixa de"],
+        "pattern": "\\d+.*\\d+",
+        "score": 25,
+        "category": "Orçamento Aproximado"
+      },
+      {
+        "keywords": ["tenho recursos", "tenho grana", "posso pagar", "consigo financiar"],
+        "score": 15,
+        "category": "Capacidade Financeira"
+      },
+      {
+        "keywords": ["depende", "conforme", "vou ver", "depois combino", "sem ideia"],
+        "score": 5,
+        "category": "Orçamento Indefinido"
+      },
+      {
+        "keywords": ["mais barato", "qual o preço mais baixo", "mais econômico"],
+        "score": 0,
+        "category": "Sensível a Preço"
+      }
+    ],
+
+    "project": [
+      {
+        "keywords": ["reforma", "construindo", "obra", "projeto", "em andamento", "já começou"],
+        "specificity": "high",
+        "score": 15,
+        "category": "Projeto Específico"
+      },
+      {
+        "keywords": ["preciso", "pro home office", "meu quarto", "sala de estar", "cozinha", "varanda"],
+        "specificity": "medium",
+        "score": 10,
+        "category": "Propósito Definido"
+      },
+      {
+        "keywords": ["quero renovar", "tá velho", "mudar", "desejo", "ideia"],
+        "specificity": "low",
+        "score": 5,
+        "category": "Necessidade Geral"
+      },
+      {
+        "keywords": ["só vendo", "só curiosidade", "fuçando"],
+        "specificity": "none",
+        "score": 0,
+        "category": "Exploração"
+      }
+    ],
+
+    "behavior": [
+      {
+        "action": "requested_quote",
+        "keywords": ["quanto custa", "preço", "valor", "orçamento"],
+        "score": 10,
+        "category": "Busca de Preço"
+      },
+      {
+        "action": "asked_to_schedule",
+        "keywords": ["agendar", "marcar", "quando você tem", "disponibilidade", "posso ir"],
+        "score": 15,
+        "category": "Tentativa de Agendamento"
+      },
+      {
+        "action": "specific_questions",
+        "keywords": ["qual é o material", "que cores tem", "qual tamanho", "frete", "instalação"],
+        "score": 10,
+        "category": "Perguntas Específicas"
+      },
+      {
+        "action": "shared_contact",
+        "keywords": ["passa seu whatsapp", "seu telefone", "como faço pra entrar em contato", "quer meu telefone"],
+        "score": 5,
+        "category": "Compartilhamento de Contato"
+      },
+      {
+        "action": "superficial_response",
+        "keywords": ["ok", "tá bom", "blz", "sim", "não", "achei legal"],
+        "score": 5,
+        "category": "Engajamento Superficial"
+      },
+      {
+        "action": "no_engagement",
+        "keywords": ["blz", "valeu", "flw", "deixa pra pensar"],
+        "score": 0,
+        "category": "Sem Engajamento"
+      }
+    ],
+
+    "experience": [
+      {
+        "keywords": ["já vi", "conheco", "comprei", "frequento", "já foi lá"],
+        "source": "direct",
+        "score": 5,
+        "category": "Cliente Recorrente"
+      },
+      {
+        "keywords": ["meu amigo recomendou", "fulano indicou", "indicação", "referência"],
+        "source": "referral",
+        "bonus": 10,
+        "category": "Indicação"
+      },
+      {
+        "keywords": ["primeira vez", "novo", "não conheço", "achei por acaso"],
+        "source": "cold",
+        "score": 0,
+        "category": "Lead Frio"
+      }
+    ],
+
+    "negative_indicators": [
+      {
+        "keywords": ["muito caro", "fora do meu alcance", "tá muito puxado", "não vou conseguir"],
+        "penalty": -15,
+        "reason": "Budget incompatibility"
+      },
+      {
+        "keywords": ["não vou comprar", "desisti", "não é meu estilo", "não gostei"],
+        "penalty": -20,
+        "reason": "Explicit rejection"
+      },
+      {
+        "keywords": ["tá vendo em outro lugar", "achei mais barato lá", "vou comprar em outro canto"],
+        "penalty": -10,
+        "reason": "Competitive interest"
+      }
+    ],
+
+    "positive_indicators": [
+      {
+        "keywords": ["adorei", "perfeito", "exatamente o que procurava", "amei", "maravilha"],
+        "bonus": 10,
+        "reason": "Strong interest"
+      },
+      {
+        "keywords": ["quanto sai", "tá ok", "dentro do orçamento", "faz sentido"],
+        "bonus": 5,
+        "reason": "Positive consideration"
+      }
+    ]
+  },
+
+  "conversation_stages": {
+    "greeting": {
+      "order": 1,
+      "keywords": ["oi", "olá", "opa", "e aí"],
+      "required": true
+    },
+    "identification": {
+      "order": 2,
+      "keywords": ["nome", "quem é", "como você se chama"],
+      "required": true
+    },
+    "need_discovery": {
+      "order": 3,
+      "keywords": ["o que você procura", "qual seu interesse", "me fala mais"],
+      "required": true
+    },
+    "qualification": {
+      "order": 4,
+      "keywords": ["quando", "quanto pode gastar", "urgência", "timeline"],
+      "required": true,
+      "turns_min": 2
+    },
+    "closing": {
+      "order": 5,
+      "keywords": ["próximo passo", "agendar", "receber contato"],
+      "required": true
+    }
+  },
+
+  "red_flags": [
+    {
+      "trigger": "Não responde em 5+ mensagens",
+      "action": "stop_conversation",
+      "reason": "Desengajamento"
+    },
+    {
+      "trigger": "Pede informações de terceiros",
+      "action": "decline_politely",
+      "reason": "Possível scam"
+    },
+    {
+      "trigger": "Links suspeitos",
+      "action": "alert_consultant",
+      "reason": "Security concern"
+    }
+  ]
+}

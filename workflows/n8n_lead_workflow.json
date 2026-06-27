@@ -1,0 +1,233 @@
+{
+  "name": "Lead Qualificação - AI",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "/webhook/lead-qualificacao",
+        "method": "POST",
+        "respondWith": "text"
+      },
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "{{ WEBHOOK_ID }}",
+      "waitTillDate": false,
+      "notes": "Recebe mensagens do simulador ou Evolution API"
+    },
+
+    {
+      "parameters": {
+        "functionCode": "// Parse webhook payload da Evolution API\nconst msg = $input.first().json.data;\nconst instanceName = msg.instanceName;\nconst message = msg.messages[0];\n\n// Extrair informações\nconst leadPhone = message.key.remoteJid.replace('@c.us', '');\nconst leadText = message.message.conversation || '';\nconst leadName = message.pushName || 'Desconhecido';\nconst timestamp = new Date(message.messageTimestamp * 1000);\n\nreturn {\n  leadPhone,\n  leadText,\n  leadName,\n  timestamp,\n  instanceName,\n  isFromMe: message.key.fromMe\n};"
+      },
+      "id": "2",
+      "name": "Parse Mensagem",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "notes": "Extrai dados do webhook"
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "{{ $env.CLAUDE_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "contentType": "application/json",
+        "body": "{\n  \"model\": \"claude-3-5-sonnet-20241022\",\n  \"max_tokens\": 1024,\n  \"system\": \"Você é um consultor de vendas especializado em móveis de alto padrão.\\n\\nSua missão:\\n1. Receber o lead com cordialidade\\n2. Fazer perguntas para entender a necessidade\\n3. Qualificar identificando: Timeline, Orçamento\\n4. Indicar próximo passo ou agendar\\n\\nInformações críticas a coletar:\\n- Nome e tipo de móvel/ambiente\\n- Timeline de compra (urgência)\\n- Orçamento aproximado\\n- Propriedade/reforma em andamento\\n\\nRegras:\\n✅ Seja cordial e prestativo\\n✅ Faça perguntas abertas\\n❌ Não pressione para compra\\n❌ Não fale de preço sem entender projeto\\n\\nTom: Profissional amigável, máx 3 frases por mensagem\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $node[\\\"Parse Mensagem\\\"].json.leadText }}\"\n    }\n  ]\n}\n"
+      },
+      "id": "3",
+      "name": "Claude API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [650, 300],
+      "notes": "Chama Claude API com o system prompt"
+    },
+
+    {
+      "parameters": {
+        "functionCode": "// Extrair resposta da IA\nconst response = $input.first().json;\n\nif (response.content && response.content[0]) {\n  const iaResponse = response.content[0].text || '';\n  \n  return {\n    iaResponse,\n    usage: response.usage,\n    success: true\n  };\n} else {\n  return {\n    iaResponse: 'Desculpe, ocorreu um erro. Pode tentar novamente?',\n    error: true,\n    success: false\n  };\n}"
+      },
+      "id": "4",
+      "name": "Extrair Resposta IA",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 300],
+      "notes": "Extrai resposta da Claude API"
+    },
+
+    {
+      "parameters": {
+        "functionCode": "// Sistema de pontuação para qualificação de leads\nconst iaResponse = $input.first().json.iaResponse || '';\nconst leadText = $node[\\\"Parse Mensagem\\\"].json.leadText || '';\nconst fullText = (iaResponse + ' ' + leadText).toLowerCase();\n\nlet score = 0;\n\n// 1. URGÊNCIA (máx 40 pontos)\nif (fullText.match(/urgente|preciso|já|semana que vem|próximos dias|imediato|rush/)) score += 40;\nelse if (fullText.match(/mês que vem|próximas semanas|30 dias/)) score += 30;\nelse if (fullText.match(/próximos 3 meses|segundo trimestre|antes do verão|90 dias/)) score += 15;\nelse if (fullText.match(/final do ano|próximo ano|sem pressa|vai depender|sem data/)) score += 5;\n\n// 2. ORÇAMENTO (máx 35 pontos)\nif (fullText.match(/\\\\d{4,5}.*reais|tenho.*orçamento|limite.*[0-9]/)) score += 35;\nelse if (fullText.match(/em torno de|aprox|algo como|na faixa/)) score += 25;\nelse if (fullText.match(/tenho recursos|tenho grana|consigo financiar/)) score += 15;\nelse if (fullText.match(/depende|conforme|vou ver|depois combino|sem ideia/)) score += 5;\n\n// 3. PROJETO (máx 15 pontos)\nif (fullText.match(/reforma|construindo|obra|em andamento|já começou/)) score += 15;\nelse if (fullText.match(/pro home office|meu quarto|sala de estar|cozinha|varanda/)) score += 10;\nelse if (fullText.match(/quero renovar|tá velho|mudar|desejo|ideia/)) score += 5;\n\n// 4. COMPORTAMENTO (máx 15 pontos)\nif (fullText.match(/quanto custa|preço|valor|agendar|marcar|quando você tem/)) score += 15;\nelse if (fullText.match(/qual é o material|que cores|qual tamanho|frete|instalação/)) score += 10;\nelse if (fullText.match(/ok|tá bom|blz|sim|não|achei legal/)) score += 5;\n\n// 5. EXPERIÊNCIA (máx 5 pontos)\nif (fullText.match(/já vi|conheco|comprei|frequento|indicação|meu amigo/)) score += 5;\n\n// Classificação\nlet classification = '';\nlet shouldNotify = false;\nlet emoji = '';\n\nif (score >= 90) {\n  classification = 'QUENTE';\n  emoji = '🔥';\n  shouldNotify = true;\n} else if (score >= 60) {\n  classification = 'MORNO';\n  emoji = '🟠';\n} else if (score >= 30) {\n  classification = 'FRIO';\n  emoji = '🟡';\n} else {\n  classification = 'MUITO_FRIO';\n  emoji = '❄️';\n}\n\nreturn {\n  score,\n  classification,\n  emoji,\n  shouldNotify\n};"
+      },
+      "id": "5",
+      "name": "Calcular Score",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1050, 300],
+      "notes": "Calcula score de qualificação baseado em palavras-chave"
+    },
+
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $node[\\\"Calcular Score\\\"].json.shouldNotify }}",
+              "operation": "equals",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "6",
+      "name": "É Quente?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1250, 300],
+      "notes": "Verifica se é lead QUENTE para notificar"
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8080/api/message/sendText/lead-seller",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.EVOLUTION_API_KEY }}"
+            }
+          ]
+        },
+        "contentType": "application/json",
+        "body": "{\n  \"number\": \"{{ $node[\\\"Parse Mensagem\\\"].json.leadPhone }}\",\n  \"text\": \"{{ $node[\\\"Extrair Resposta IA\\\"].json.iaResponse }}\"\n}"
+      },
+      "id": "7",
+      "name": "Enviar Resposta (True)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1450, 200],
+      "notes": "Envia resposta da IA para o lead"
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8080/api/message/sendText/lead-seller",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.EVOLUTION_API_KEY }}"
+            }
+          ]
+        },
+        "contentType": "application/json",
+        "body": "{\n  \"number\": \"{{ $env.CONSULTOR_WHATSAPP }}\",\n  \"text\": \"🔥 LEAD QUENTE! 🔥\\n\\n👤 {{ $node[\\\"Parse Mensagem\\\"].json.leadName }}\\n📱 {{ $node[\\\"Parse Mensagem\\\"].json.leadPhone }}\\n💬 {{ $node[\\\"Parse Mensagem\\\"].json.leadText }}\\n📊 Score: {{ $node[\\\"Calcular Score\\\"].json.score }}/120\\n⏰ Horário: {{ $node[\\\"Parse Mensagem\\\"].json.timestamp }}\\n\\n→ CONTATO IMEDIATO RECOMENDADO!\"\n}"
+      },
+      "id": "8",
+      "name": "Notificar Consultor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1450, 100],
+      "notes": "Notifica consultor via WhatsApp sobre lead QUENTE"
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8080/api/message/sendText/lead-seller",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.EVOLUTION_API_KEY }}"
+            }
+          ]
+        },
+        "contentType": "application/json",
+        "body": "{\n  \"number\": \"{{ $node[\\\"Parse Mensagem\\\"].json.leadPhone }}\",\n  \"text\": \"{{ $node[\\\"Extrair Resposta IA\\\"].json.iaResponse }}\"\n}"
+      },
+      "id": "9",
+      "name": "Enviar Resposta (False)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1450, 400],
+      "notes": "Envia resposta para leads não-quentes"
+    },
+
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonData": "{\n  \"leadPhone\": \"{{ $node[\\\"Parse Mensagem\\\"].json.leadPhone }}\",\n  \"leadName\": \"{{ $node[\\\"Parse Mensagem\\\"].json.leadName }}\",\n  \"leadText\": \"{{ $node[\\\"Parse Mensagem\\\"].json.leadText }}\",\n  \"classification\": \"{{ $node[\\\"Calcular Score\\\"].json.classification }}\",\n  \"score\": {{ $node[\\\"Calcular Score\\\"].json.score }},\n  \"iaResponse\": \"{{ $node[\\\"Extrair Resposta IA\\\"].json.iaResponse }}\",\n  \"timestamp\": \"{{ $node[\\\"Parse Mensagem\\\"].json.timestamp }}\",\n  \"shouldNotify\": {{ $node[\\\"Calcular Score\\\"].json.shouldNotify }}\n}"
+      },
+      "id": "10",
+      "name": "Log Final",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1650, 300],
+      "notes": "Registra resultado da qualificação"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Parse Mensagem", "type": "main", "index": 0 }]]
+    },
+    "Parse Mensagem": {
+      "main": [[{ "node": "Claude API", "type": "main", "index": 0 }]]
+    },
+    "Claude API": {
+      "main": [[{ "node": "Extrair Resposta IA", "type": "main", "index": 0 }]]
+    },
+    "Extrair Resposta IA": {
+      "main": [[{ "node": "Calcular Score", "type": "main", "index": 0 }]]
+    },
+    "Calcular Score": {
+      "main": [[{ "node": "É Quente?", "type": "main", "index": 0 }]]
+    },
+    "É Quente?": {
+      "main": [
+        [{ "node": "Notificar Consultor", "type": "main", "index": 0 }, { "node": "Enviar Resposta (True)", "type": "main", "index": 0 }],
+        [{ "node": "Enviar Resposta (False)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Notificar Consultor": {
+      "main": [[{ "node": "Log Final", "type": "main", "index": 0 }]]
+    },
+    "Enviar Resposta (True)": {
+      "main": [[{ "node": "Log Final", "type": "main", "index": 0 }]]
+    },
+    "Enviar Resposta (False)": {
+      "main": [[{ "node": "Log Final", "type": "main", "index": 0 }]]
+    }
+  }
+}

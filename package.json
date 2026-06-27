@@ -1,0 +1,24 @@
+{
+  "name": "lead-ai",
+  "version": "1.0.0",
+  "description": "Sistema de IA para atendimento automático, qualificação e classificação de leads em WhatsApp usando Evolution API + n8n + Claude API.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "scripts": {
+    "n8n": "n8n start",
+    "simulator": "node simulador.js",
+    "test:quente": "node simulador.js test quente",
+    "test:frio": "node simulador.js test frio",
+    "test:custom": "node simulador.js send"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "n8n": "^2.22.4"
+  }
+}

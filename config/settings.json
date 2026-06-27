@@ -1,0 +1,134 @@
+{
+  "app": {
+    "name": "Lead AI - Qualificador Automático",
+    "version": "1.0.0",
+    "environment": "local",
+    "debug": true
+  },
+
+  "business": {
+    "consultor_nome": "Seu Nome",
+    "empresa_name": "Loja de Móveis Premium",
+    "segmento": "Móveis de Alto Padrão",
+    "showroom": {
+      "endereco": "Rua Principal, 100 - Centro",
+      "telefone": "(11) 99999-9999",
+      "whatsapp": "551199999999",
+      "horario": "Seg-Sex: 09h-18h | Sab: 10h-14h"
+    }
+  },
+
+  "api": {
+    "evolution": {
+      "url": "http://localhost:8080",
+      "api_key": "${EVOLUTION_API_KEY}",
+      "webhook_url": "http://seu-dominio.com/webhook/leads"
+    },
+    "n8n": {
+      "url": "http://localhost:5678",
+      "webhook_path": "/webhook/lead-qualificacao",
+      "api_key": "${N8N_API_KEY}"
+    },
+    "claude": {
+      "api_key": "${CLAUDE_API_KEY}",
+      "model": "claude-3-5-sonnet-20241022",
+      "temperature": 0.7,
+      "max_tokens": 1024
+    }
+  },
+
+  "qualification": {
+    "enabled": true,
+    "score_system": {
+      "urgency_max": 40,
+      "budget_max": 35,
+      "project_max": 15,
+      "behavior_max": 15,
+      "experience_max": 5,
+      "total_max": 120
+    },
+    "thresholds": {
+      "quente": {
+        "min": 90,
+        "max": 120,
+        "emoji": "🔥",
+        "notify": true
+      },
+      "morno": {
+        "min": 60,
+        "max": 89,
+        "emoji": "🟠",
+        "notify": false,
+        "followup_hours": 24
+      },
+      "frio": {
+        "min": 30,
+        "max": 59,
+        "emoji": "🟡",
+        "notify": false,
+        "followup_hours": 72
+      },
+      "muito_frio": {
+        "min": 0,
+        "max": 29,
+        "emoji": "❄️",
+        "notify": false,
+        "followup_hours": 168
+      }
+    }
+  },
+
+  "notifications": {
+    "enabled": true,
+    "quente_lead": {
+      "whatsapp": true,
+      "email": true,
+      "sound": true,
+      "template": "🔥 LEAD QUENTE: {nome} - {motivo}"
+    },
+    "morno_lead": {
+      "whatsapp": false,
+      "email": true,
+      "sound": false
+    }
+  },
+
+  "database": {
+    "type": "sqlite",
+    "path": "./data/leads.db",
+    "backup": {
+      "enabled": true,
+      "frequency": "daily",
+      "path": "./backups/"
+    }
+  },
+
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "files": {
+      "path": "./logs/",
+      "retention_days": 30
+    }
+  },
+
+  "conversation": {
+    "max_turns": 8,
+    "timeout_minutes": 5,
+    "language": "pt-BR",
+    "tone": "profissional_amigavel"
+  },
+
+  "furniture_categories": [
+    "Sofás",
+    "Poltronas",
+    "Camas",
+    "Mesas de Jantar",
+    "Cadeiras",
+    "Armários",
+    "Decoração",
+    "Escritório",
+    "Outdoor",
+    "Cozinha"
+  ]
+}
